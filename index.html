@@ -155,16 +155,46 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2>
+      <img src="./assets/images/img1.png"
+           alt="Main figure for YOGO."
+           class="teaser-image">
     </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            3D Gaussian Splatting (3DGS) has revolutionized neural rendering, yet existing
+            methods remain predominantly research prototypes ill-suited for production-level
+            deployment. We identify a critical "Industry-Academia Gap" hindering real-world
+            application: unpredictable resource consumption from heuristic Gaussian growth, the
+            "sparsity shield" of current benchmarks that rewards hallucination over physical
+            fidelity, and severe multi-sensor data pollution. To bridge this gap, we propose
+            <strong>YOGO (You Only Gaussian Once)</strong>, a system-level framework that
+            reformulates the stochastic growth process into a deterministic, budget-aware
+            equilibrium. YOGO integrates a novel budget controller for hardware-constrained
+            resource allocation and an availability-registration protocol for robust multi-sensor
+            fusion. To push the boundaries of reconstruction fidelity, we introduce
+            <strong>Immersion v1.0</strong>, the first ultra-dense indoor dataset specifically
+            designed to break the "sparsity shield." By providing saturated viewpoint coverage,
+            Immersion v1.0 forces algorithms to focus on extreme physical fidelity rather than
+            viewpoint interpolation, and enables the community to focus on the upper limits of
+            high-fidelity reconstruction. Extensive experiments demonstrate that YOGO achieves
+            state-of-the-art visual quality while maintaining a strictly deterministic profile,
+            establishing a new standard for production-grade 3DGS. To facilitate reproducibility,
+            part scenes of Immersion v1.0 dataset has been publicly released, and the rest data
+            with source code of YOGO will be made available after the review process.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
   </div>
 </section>
 
@@ -229,42 +259,6 @@
 
 <section class="section">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
-          </p>
-          <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
-          </p>
-          <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--/ Abstract. -->
 
     <!-- Paper video. -->
     <div class="columns is-centered has-text-centered">
