@@ -23,7 +23,7 @@ function setComparePosition(wrapper, percentage) {
   var clamped = Math.max(0, Math.min(100, percentage));
   var overlay = wrapper.querySelector('[data-compare-overlay]');
   var divider = wrapper.querySelector('[data-compare-handle]');
-  overlay.style.width = clamped + '%';
+  overlay.style.clipPath = 'inset(0 ' + (100 - clamped) + '% 0 0)';
   divider.style.left = clamped + '%';
   wrapper.dataset.comparePosition = clamped;
 }
