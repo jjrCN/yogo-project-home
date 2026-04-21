@@ -89,6 +89,12 @@ body {
   /*color: #4286f4;*/
 }
 
+.publication-notes {
+  color: #7a7a7a;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
 .publication-video {
     position: relative;
     width: 100%;
