@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YOGO | Project Page</title>
+    <meta
+      name="description"
+      content="YOGO: You Only Gaussian Once. A project page for controllable 3D Gaussian Splatting under deterministic budgets and the ultra-dense Immersion v1.0 benchmark."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="./assets/styles/main.css">
+    <script defer src="./assets/scripts/main.js"></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="hero">
+        <div class="hero-noise" aria-hidden="true"></div>
+        <nav class="masthead container">
+          <a class="brand" href="#top" aria-label="YOGO home">
+            <span class="brand-mark">Y</span>
+            <span class="brand-text">YOGO</span>
+          </a>
+          <div class="masthead-links">
+            <a href="#overview">Overview</a>
+            <a href="#method">Method</a>
+            <a href="#benchmark">Benchmark</a>
+            <a href="#results">Results</a>
+            <a href="#media">Media</a>
+            <a href="#citation">Citation</a>
+          </div>
+        </nav>
+
+        <div class="container hero-grid" id="top">
+          <div class="hero-copy">
+            <p class="eyebrow">Project Homepage Draft</p>
+            <h1 class="publication-title">
+              You Only Gaussian Once
+            </h1>
+            <p class="publication-subtitle">
+              Controllable 3D Gaussian Splatting for Ultra-Densely Sampled Scenes
+            </p>
+            <p class="publication-meta">
+              Anonymous ECCV 2026 submission
+            </p>
+            <p class="hero-lead">
+              YOGO reframes 3D Gaussian Splatting as a deterministic, resource-aware
+              system: predictable budget control, robust multi-sensor fusion, and a new
+              ultra-dense benchmark that pressures methods to optimize for physical
+              fidelity instead of hiding behind sparse viewpoint coverage.
+            </p>
+
+            <div class="badge-row">
+              <span class="badge">Deterministic budget control</span>
+              <span class="badge">Production-oriented 3DGS</span>
+              <span class="badge">Immersion v1.0 benchmark</span>
+            </div>
+
+            <div class="cta-row">
+              <a class="button button-primary" href="./YOGO.pdf">Read Paper</a>
+              <a class="button button-secondary" href="#benchmark">See Highlights</a>
+              <a class="button button-secondary" href="#citation">Copy Citation</a>
+            </div>
+
+            <p class="hero-note">
+              This version focuses on the page architecture and paper narrative first.
+              Teaser videos, comparison sliders, scene galleries, and extra assets can
+              be dropped into the reserved slots later.
+            </p>
+          </div>
+
+          <aside class="paper-card">
+            <div class="paper-card-frame">
+              <img
+                src="./assets/images/yogo-paper-cover.png"
+                alt="First page preview of the YOGO paper"
+              >
+            </div>
+            <p class="paper-card-caption">
+              Current PDF cover preview. Additional hero visuals can replace this block
+              once your curated media is ready.
+            </p>
+          </aside>
+        </div>
+
+        <div class="container hero-stats">
+          <article class="stat-card">
+            <p class="stat-value">30K+</p>
+            <p class="stat-label">synchronized multi-sensor frames per scene</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-value">2.55M</p>
+            <p class="stat-label">average initial points per scene</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-value">IDSM 500</p>
+            <p class="stat-label">ultra-dense viewpoint saturation metric</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-value">72%</p>
+            <p class="stat-label">average scene coverage on Immersion v1.0</p>
+          </article>
+        </div>
+      </header>
+
+      <main>
+        <section class="section container" id="overview">
+          <div class="section-heading">
+            <p class="section-kicker">Overview</p>
+            <h2>Built to close the industry-academia gap in 3DGS</h2>
+          </div>
+
+          <div class="overview-grid">
+            <div class="overview-copy">
+              <p>
+                The paper identifies three practical blockers that keep many 3D Gaussian
+                Splatting systems in the research-prototype stage: uncontrolled model
+                growth, benchmarks that reward hallucination over physical fidelity, and
+                severe pollution when fusing heterogeneous sensor inputs.
+              </p>
+              <p>
+                YOGO responds with a system-level redesign. Instead of letting heuristics
+                decide model size, it enforces a hard budget. Instead of evaluating on
+                sparsity-protected datasets, it introduces Immersion v1.0, an indoor
+                benchmark with near-continuous observation. Instead of naive sensor fusion,
+                it filters data by availability and radiometric consistency before training.
+              </p>
+            </div>
+
+            <div class="overview-points">
+              <article class="mini-card">
+                <h3>What changes</h3>
+                <p>
+                  A controllable 3DGS pipeline that treats memory and fidelity as first-class
+                  design constraints.
+                </p>
+              </article>
+              <article class="mini-card">
+                <h3>Why it matters</h3>
+                <p>
+                  Teams can choose a budget target up front, reproduce it reliably, and still
+                  retain strong rendering quality.
+                </p>
+              </article>
+              <article class="mini-card">
+                <h3>What the benchmark tests</h3>
+                <p>
+                  Whether a method can model real structure under dense, multi-sensor,
+                  physically demanding capture conditions.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section container section-alt">
+          <div class="section-heading">
+            <p class="section-kicker">Abstract</p>
+            <h2>A concise paper summary for visitors landing on the page</h2>
+          </div>
+
+          <div class="abstract-card">
+            <p>
+              3D Gaussian Splatting has transformed neural rendering, but many existing
+              methods remain poorly aligned with real production constraints. YOGO
+              reformulates stochastic Gaussian growth into a deterministic, budget-aware
+              equilibrium, adds a new availability-registration protocol for robust
+              multi-sensor fusion, and introduces Immersion v1.0, an ultra-dense indoor
+              benchmark designed to break the "sparsity shield." Across extensive
+              experiments, YOGO delivers state-of-the-art visual quality while preserving
+              a strictly predictable resource profile.
+            </p>
+          </div>
+        </section>
+
+        <section class="section container" id="method">
+          <div class="section-heading">
+            <p class="section-kicker">Core Design</p>
+            <h2>Four contributions that define the YOGO framework</h2>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <p class="feature-index">01</p>
+              <h3>Deterministic Budget Control</h3>
+              <p>
+                Heuristic growth is replaced with a feedback controller that enforces
+                hardware-defined primitive budgets and can localize fidelity to spatial
+                regions of interest.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-index">02</p>
+              <h3>Availability-Registration Fusion</h3>
+              <p>
+                A dynamic multi-sensor filtering protocol explicitly models data
+                availability, radiometric inconsistency, and noisy measurements before
+                fusion.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-index">03</p>
+              <h3>Solid Optimization Suite</h3>
+              <p>
+                Targeted components such as area-normalized gradient accumulation,
+                maximum effective opacity pruning, and principal-axis densification
+                sharpen structure while compressing model scale.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-index">04</p>
+              <h3>Immersion v1.0 Benchmark</h3>
+              <p>
+                An ultra-dense indoor benchmark with saturated multi-sensor acquisition
+                that shifts evaluation from sparse-view interpolation toward absolute
+                physical fidelity.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section container section-alt" id="benchmark">
+          <div class="section-heading">
+            <p class="section-kicker">Benchmark</p>
+            <h2>Immersion v1.0 is designed to remove the sparsity safety net</h2>
+          </div>
+
+          <div class="benchmark-layout">
+            <div class="benchmark-copy">
+              <p>
+                Typical indoor benchmarks offer hundreds of images per scene, with
+                ScanNet++ averaging around 1,900. Immersion v1.0 pushes well beyond that
+                regime with a six-loop saturated acquisition protocol producing more than
+                30,000 synchronized multi-sensor frames per scene.
+              </p>
+              <p>
+                The dataset also reports a much denser geometric substrate: roughly
+                2.55 million initial points per scene, about 15x larger than the
+                approximately 161K initial points reported for ScanNet++.
+              </p>
+            </div>
+
+            <div class="benchmark-metrics">
+              <article class="metric-panel">
+                <h3>Data volume</h3>
+                <p class="metric-big">15x</p>
+                <p class="metric-note">more frames than ScanNet++</p>
+              </article>
+              <article class="metric-panel">
+                <h3>Coverage</h3>
+                <p class="metric-big">72%</p>
+                <p class="metric-note">average occupied-grid scene coverage</p>
+              </article>
+              <article class="metric-panel">
+                <h3>Viewpoint density</h3>
+                <p class="metric-big">4x</p>
+                <p class="metric-note">higher IDSM than ScanNet++</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section container" id="results">
+          <div class="section-heading">
+            <p class="section-kicker">Results</p>
+            <h2>Key takeaways you can surface before adding full figures and videos</h2>
+          </div>
+
+          <div class="results-grid">
+            <article class="result-card">
+              <h3>Predictable trade-offs</h3>
+              <p>
+                YOGO exposes the performance-memory curve explicitly instead of hiding it
+                behind uncontrolled densification.
+              </p>
+            </article>
+            <article class="result-card">
+              <h3>Clear saturation point</h3>
+              <p>
+                On the SSS track, moving from YOGO1 to YOGO2 with about 2M extra points
+                yields a notable +0.13 Qalign gain, while another 2M points to YOGO3 adds
+                only 0.04 more.
+              </p>
+            </article>
+            <article class="result-card">
+              <h3>Efficiency over raw scale</h3>
+              <p>
+                Even the constrained YOGO1 setting at 1.5M points surpasses the rendering
+                quality of AbsGS using 4.28M points on the reported comparisons.
+              </p>
+            </article>
+            <article class="result-card">
+              <h3>Dense-benchmark robustness</h3>
+              <p>
+                Baselines that depend on global statistics or extensive recalibration run
+                into severe overhead or OOM issues when scaled to Immersion v1.0.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section container section-alt" id="media">
+          <div class="section-heading">
+            <p class="section-kicker">Reserved Slots</p>
+            <h2>The page is ready for the next wave of visual assets</h2>
+          </div>
+
+          <div class="placeholder-grid">
+            <article class="placeholder-card placeholder-wide">
+              <p class="placeholder-label">Teaser video</p>
+              <h3>Main hero video block</h3>
+              <p>
+                Drop in your overview video, narrated teaser, or a stitched set of before
+                and after renderings here.
+              </p>
+            </article>
+
+            <article class="placeholder-card">
+              <p class="placeholder-label">Method figure</p>
+              <h3>Pipeline diagram</h3>
+              <p>
+                Best place for the framework overview figure or a polished process graphic.
+              </p>
+            </article>
+
+            <article class="placeholder-card">
+              <p class="placeholder-label">Qualitative slider</p>
+              <h3>Visual comparisons</h3>
+              <p>
+                Ready for baseline comparisons, drag sliders, or tabbed scene examples.
+              </p>
+            </article>
+
+            <article class="placeholder-card">
+              <p class="placeholder-label">Benchmark tables</p>
+              <h3>Quantitative panels</h3>
+              <p>
+                A clean landing spot for PSNR, SSIM, LPIPS, Qalign, and memory trade-off tables.
+              </p>
+            </article>
+
+            <article class="placeholder-card">
+              <p class="placeholder-label">Scene gallery</p>
+              <h3>Immersion dataset showcase</h3>
+              <p>
+                Multi-room scenes, sensor layout illustrations, and challenge cases can go here.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section container" id="resources">
+          <div class="section-heading">
+            <p class="section-kicker">Resources</p>
+            <h2>Launch now with paper-first links, add everything else later</h2>
+          </div>
+
+          <div class="resource-grid">
+            <a class="resource-card" href="./YOGO.pdf">
+              <span class="resource-tag">Available now</span>
+              <h3>Paper PDF</h3>
+              <p>Direct access to the current anonymized submission draft.</p>
+            </a>
+
+            <article class="resource-card resource-card-muted">
+              <span class="resource-tag">Next update</span>
+              <h3>Code Repository</h3>
+              <p>
+                Add the final GitHub repo link here when you are ready to open source or share.
+              </p>
+            </article>
+
+            <article class="resource-card resource-card-muted">
+              <span class="resource-tag">Next update</span>
+              <h3>Dataset Release</h3>
+              <p>
+                Link the public Immersion split, sample scenes, or release note once available.
+              </p>
+            </article>
+
+            <article class="resource-card resource-card-muted">
+              <span class="resource-tag">Camera-ready polish</span>
+              <h3>Authors and Affiliations</h3>
+              <p>
+                Replace the anonymous submission line in the hero with the final author block.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section container section-alt" id="citation">
+          <div class="section-heading">
+            <p class="section-kicker">BibTeX</p>
+            <h2>Ready to share, easy to replace after camera-ready</h2>
+          </div>
+
+          <div class="citation-card">
+            <div class="citation-header">
+              <h3>Draft citation</h3>
+              <button class="copy-button" type="button" data-copy-target="bibtex">
+                Copy
+              </button>
+            </div>
+            <pre id="bibtex">@misc{yogo2026,
+  title        = {You Only Gaussian Once: Controllable 3D Gaussian Splatting for Ultra-Densely Sampled Scenes},
+  author       = {Anonymous},
+  year         = {2026},
+  note         = {ECCV 2026 submission}
+}</pre>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container footer-content">
+          <p>
+            YOGO project homepage draft. Structure inspired by academic project pages such as
+            MVP and the Nerfies template, adapted into a lighter, media-ready layout for this work.
+          </p>
+          <p>
+            <span id="current-year"></span> · Static GitHub Pages site
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
