@@ -14,6 +14,12 @@ var QUANTITATIVE_METRICS = [
   {key: 'point', label: 'Point', color: '#e9c46a', better: 'lower'}
 ];
 
+var QUANTITATIVE_TRACK_LABELS = {
+  SSS: 'Single-Sensor Sparse Track (SSS)',
+  SSD: 'Single-Sensor Dense Track (SSD)',
+  MSD: 'Multi-Sensor Dense Track (MSD)'
+};
+
 var QUANTITATIVE_TRACKS = {
   SSS: [
     {method: '3DGS', point: 1.46, evalPSNR: 22.49, evalSSIM: 0.8407, evalLPIPS: 0.3375, evalQalign: 2.7290, testQalign: 2.6571},
@@ -100,24 +106,20 @@ function renderQuantitativeTrack(containerId, trackName) {
   }
 
   var bounds = container.getBoundingClientRect();
-  var width = Math.max(320, Math.round(bounds.width || container.clientWidth || 960));
+  var containerWidth = Math.max(320, Math.round(bounds.width || container.clientWidth || 960));
   var metricsPerMethod = QUANTITATIVE_METRICS.length;
   var margins = {top: 62, right: 12, bottom: 54, left: 12};
   var plotHeight = track.length > 6 ? 250 : 225;
   var height = margins.top + plotHeight + margins.bottom;
-  var innerWidth = width - margins.left - margins.right;
-  var groupGap = track.length > 6 ? 18 : 22;
-  var barGap = 4;
-  var minBarWidth = track.length > 6 ? 8 : 10;
-  var maxBarWidth = track.length > 6 ? 14 : 18;
-  var barWidth = Math.floor(
-    (innerWidth - ((track.length - 1) * groupGap) - (track.length * (metricsPerMethod - 1) * barGap)) /
-    (track.length * metricsPerMethod)
-  );
-
-  barWidth = Math.max(minBarWidth, Math.min(maxBarWidth, barWidth));
-
+  var groupGap = track.length > 6 ? 14 : 12;
+  var barGap = track.length > 6 ? 4 : 3;
+  var barWidth = track.length > 6 ? 13 : 16;
   var groupWidth = metricsPerMethod * barWidth + (metricsPerMethod - 1) * barGap;
+  var width = Math.max(
+    containerWidth,
+    margins.left + margins.right + (track.length * groupWidth) + ((track.length - 1) * groupGap)
+  );
+  var innerWidth = width - margins.left - margins.right;
   var usedWidth = track.length * groupWidth + (track.length - 1) * groupGap;
   var startX = margins.left + Math.max(0, Math.floor((innerWidth - usedWidth) / 2));
   var baselineY = margins.top + plotHeight;
@@ -134,7 +136,7 @@ function renderQuantitativeTrack(containerId, trackName) {
 
   svg.push(
     '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="' +
-    escapeSvgText(trackName + ' quantitative comparison chart') + '">'
+    escapeSvgText((QUANTITATIVE_TRACK_LABELS[trackName] || trackName) + ' quantitative comparison chart') + '">'
   );
   svg.push(
     '<line x1="' + margins.left + '" y1="' + baselineY + '" x2="' + (width - margins.right) +
