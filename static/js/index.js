@@ -58,6 +58,13 @@ function updateCompareToggleLabel(button, activeKey) {
   button.textContent = activeKey === '3dgs' ? defaultLabel : altLabel;
 }
 
+function updateComparePlaybackLabel(button, isPaused) {
+  if (!button) return;
+  var playLabel = button.dataset.compareLabelPlay || 'Play';
+  var pauseLabel = button.dataset.compareLabelPause || 'Pause';
+  button.textContent = isPaused ? playLabel : pauseLabel;
+}
+
 function setActiveSecondary(wrapper, activeKey) {
   wrapper.querySelectorAll('[data-compare-secondary]').forEach(function(video) {
     var isActive = video.dataset.compareKey === activeKey;
@@ -127,11 +134,13 @@ function initCompareSlider(wrapper) {
   var secondaryVideos = Array.from(wrapper.querySelectorAll('[data-compare-secondary]'));
   var root = wrapper.closest('[data-compare-root]') || wrapper;
   var toggleButton = root.querySelector('[data-compare-toggle]');
+  var playToggleButton = wrapper.querySelector('[data-compare-play-toggle]');
   if (!primary || !secondaryVideos.length) return;
 
   setComparePosition(wrapper, 50);
   setActiveSecondary(wrapper, wrapper.dataset.compareSecondaryActive || '3dgs');
   updateCompareToggleLabel(toggleButton, wrapper.dataset.compareSecondaryActive || '3dgs');
+  updateComparePlaybackLabel(playToggleButton, false);
 
   var syncController = syncCompareVideos(wrapper, primary, secondaryVideos);
 
@@ -154,6 +163,9 @@ function initCompareSlider(wrapper) {
   }
 
   wrapper.addEventListener('pointerdown', function(event) {
+    if (event.target.closest('[data-compare-play-toggle]')) {
+      return;
+    }
     isDragging = true;
     wrapper.classList.add('is-dragging');
     updateFromPointer(event.clientX);
@@ -162,6 +174,14 @@ function initCompareSlider(wrapper) {
   window.addEventListener('pointermove', onPointerMove);
   window.addEventListener('pointerup', stopDragging);
   window.addEventListener('pointercancel', stopDragging);
+
+  primary.addEventListener('play', function() {
+    updateComparePlaybackLabel(playToggleButton, false);
+  });
+
+  primary.addEventListener('pause', function() {
+    updateComparePlaybackLabel(playToggleButton, true);
+  });
 
   primary.addEventListener('loadedmetadata', function() {
     if (syncController) {
@@ -192,11 +212,27 @@ function initCompareSlider(wrapper) {
     });
   }
 
+  if (playToggleButton) {
+    playToggleButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (primary.paused) {
+        playCompareVideo(primary);
+      } else {
+        primary.pause();
+      }
+    });
+  }
+
   secondaryVideos.forEach(function(video) {
     if (video.classList.contains('is-active') && !primary.paused) {
       playCompareVideo(video);
     }
   });
+
+  if (primary.paused) {
+    playCompareVideo(primary);
+  }
 }
 
 

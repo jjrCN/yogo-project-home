@@ -206,39 +206,35 @@
         <div class="column is-four-fifths">
           <h2 class="title is-3">Qualitative Comparison</h2>
           <div class="compare-module" data-compare-root>
-            <div class="compare-switcher">
-              <button class="button compare-toggle-button"
-                      type="button"
-                      data-compare-toggle
-                      data-compare-label-default="Click to compare with AbsGS"
-                      data-compare-label-alt="Click to compare with 3DGS">
-                Click to compare with AbsGS
-              </button>
-            </div>
             <div class="video-compare"
                  data-compare-slider
                  data-compare-secondary-active="3dgs">
+              <button class="button compare-play-button"
+                      type="button"
+                      data-compare-play-toggle
+                      data-compare-label-play="Play"
+                      data-compare-label-pause="Pause">
+                Pause
+              </button>
               <div class="video-compare-back">
                 <video class="compare-video is-active"
                        data-compare-secondary
                        data-compare-key="3dgs"
-                       autoplay
                        muted
                        loop
                        playsinline
-                       preload="auto">
-                  <source src="./assets/vedio/scene0/3DGS.mp4"
+                       preload="metadata">
+                  <source src="./assets/vedio/scene0/3DGS_web.mp4"
                           type="video/mp4">
                 </video>
                 <video class="compare-video"
                        data-compare-secondary
                        data-compare-key="absgs"
-                       autoplay
                        muted
                        loop
                        playsinline
-                       preload="auto">
-                  <source src="./assets/vedio/scene0/AbsGS.mp4"
+                       preload="metadata">
+                  <source src="./assets/vedio/scene0/AbsGS_web.mp4"
                           type="video/mp4">
                 </video>
               </div>
@@ -249,14 +245,23 @@
                        muted
                        loop
                        playsinline
-                       preload="auto">
-                  <source src="./assets/vedio/scene0/YOGO.mp4"
+                       preload="metadata">
+                  <source src="./assets/vedio/scene0/YOGO_web.mp4"
                           type="video/mp4">
                 </video>
               </div>
               <div class="video-compare-divider" data-compare-handle>
                 <span class="video-compare-knob"></span>
               </div>
+            </div>
+            <div class="compare-switcher">
+              <button class="button compare-toggle-button"
+                      type="button"
+                      data-compare-toggle
+                      data-compare-label-default="Click to compare with AbsGS"
+                      data-compare-label-alt="Click to compare with 3DGS">
+                Click to compare with AbsGS
+              </button>
             </div>
           </div>
         </div>
