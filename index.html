@@ -155,9 +155,20 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./assets/images/img1.png"
-           alt="Main figure for YOGO."
-           class="teaser-image">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="./assets/images/img1-1400.webp 1400w,
+                  ./assets/images/img1-2400.webp 2400w"
+          sizes="(max-width: 1023px) calc(100vw - 3rem), 960px">
+        <img src="./assets/images/img1.png"
+             alt="Main figure for YOGO."
+             class="teaser-image"
+             width="2400"
+             height="2253"
+             decoding="async"
+             fetchpriority="high">
+      </picture>
     </div>
   </div>
 </section>
@@ -234,9 +245,20 @@
       <div class="column is-full-width">
         <h2 class="title is-3 has-text-centered">Core Architectural Design</h2>
         <div class="architecture-figure">
-          <img src="./assets/images/img2.png"
-               alt="Core architectural design of YOGO."
-               class="architecture-image">
+          <picture>
+            <source
+              type="image/webp"
+              srcset="./assets/images/img2-1600.webp 1600w,
+                      ./assets/images/img2-2600.webp 2600w"
+              sizes="(max-width: 1023px) calc(100vw - 3rem), 960px">
+            <img src="./assets/images/img2.png"
+                 alt="Core architectural design of YOGO."
+                 class="architecture-image"
+                 width="2600"
+                 height="1198"
+                 decoding="async"
+                 loading="lazy">
+          </picture>
         </div>
         <div class="content has-text-justified architecture-description">
           <p>
