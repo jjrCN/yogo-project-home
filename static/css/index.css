@@ -6,10 +6,16 @@ body {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 12% 18%, rgba(119, 190, 255, 0.18), transparent 26%),
-    radial-gradient(circle at 88% 14%, rgba(255, 214, 153, 0.18), transparent 24%),
-    radial-gradient(circle at 52% 82%, rgba(191, 223, 255, 0.16), transparent 28%),
-    linear-gradient(180deg, #f8fbff 0%, #fbfcff 44%, #fffdfa 100%);
+    radial-gradient(circle at 14% 16%, rgba(177, 213, 255, 0.78), transparent 23%),
+    radial-gradient(circle at 86% 12%, rgba(255, 223, 179, 0.78), transparent 22%),
+    radial-gradient(circle at 50% 78%, rgba(206, 227, 255, 0.72), transparent 27%),
+    linear-gradient(125deg,
+      #edf5ff 0%,
+      #edf5ff 34%,
+      #fff5e8 34%,
+      #fff5e8 62%,
+      #eef6ff 62%,
+      #eef6ff 100%);
 }
 
 .top-showcase::before {
@@ -17,13 +23,30 @@ body {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 42%),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.08));
+    repeating-linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.26) 0,
+      rgba(255, 255, 255, 0.26) 22px,
+      rgba(255, 255, 255, 0) 22px,
+      rgba(255, 255, 255, 0) 68px
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.06));
+  pointer-events: none;
+}
+
+.top-showcase::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -18% auto;
+  width: 48%;
+  height: 44%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
 
 .top-showcase .navbar,
-.top-showcase .hero {
+.top-showcase .hero,
+.top-showcase .teaser {
   position: relative;
   z-index: 1;
   background: transparent;
@@ -317,17 +340,26 @@ body {
   margin: 0;
   padding: 1rem 1.1rem;
   border-radius: 12px;
-  border: 1px solid #dde3eb;
-  background: #f7f9fc;
-  color: #2f3542;
+  border: 1px solid #e2e7ef;
+  background: #ffffff !important;
+  color: #111827 !important;
   overflow-x: auto;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .bibtex-card code {
   font-size: 0.95rem;
   line-height: 1.6;
   white-space: pre;
-  color: inherit;
+  color: #111827 !important;
+  background: transparent !important;
+}
+
+.bibtex-card pre code {
+  display: block;
+  padding: 0;
+  color: #111827 !important;
+  background: transparent !important;
 }
 
 @media screen and (max-width: 768px) {
