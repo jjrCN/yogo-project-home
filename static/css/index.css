@@ -61,6 +61,26 @@ body {
     font-family: 'Google Sans', sans-serif;
 }
 
+.yogo-word {
+  display: inline-block;
+}
+
+.yogo-word-y {
+  color: #d94841;
+}
+
+.yogo-word-o1 {
+  color: #f08c00;
+}
+
+.yogo-word-g {
+  color: #2b8a3e;
+}
+
+.yogo-word-o2 {
+  color: #1c7ed6;
+}
+
 .publication-authors {
     font-family: 'Google Sans', sans-serif;
 }
