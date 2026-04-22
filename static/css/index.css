@@ -143,6 +143,30 @@ body {
   margin: 0;
 }
 
+.compare-switcher {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.compare-toggle-button {
+  background: #2b2b2b;
+  border-color: #2b2b2b;
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  color: #ffffff;
+  font-weight: 600;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+}
+
+.compare-toggle-button:hover,
+.compare-toggle-button:focus {
+  background: #404040;
+  border-color: #404040;
+  color: #ffffff;
+}
+
 .video-compare {
   position: relative;
   overflow: hidden;
@@ -156,6 +180,21 @@ body {
 
 .video-compare-back {
   position: relative;
+  display: grid;
+}
+
+.video-compare-back .compare-video {
+  grid-area: 1 / 1;
+}
+
+.video-compare-back [data-compare-secondary] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.video-compare-back [data-compare-secondary].is-active {
+  opacity: 1;
 }
 
 .video-compare-front {

@@ -28,54 +28,112 @@ function setComparePosition(wrapper, percentage) {
   wrapper.dataset.comparePosition = clamped;
 }
 
-function syncCompareVideos(primary, secondary) {
-  if (!primary || !secondary) return;
+function playCompareVideo(video) {
+  if (!video) return;
+  var playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(function() {});
+  }
+}
 
-  function syncTime(force) {
-    if (Math.abs(primary.currentTime - secondary.currentTime) > 0.08 || force) {
-      try {
-        secondary.currentTime = primary.currentTime;
-      } catch (error) {
-        // Ignore transient seek errors until metadata is ready.
-      }
+function syncVideoTime(source, target, force) {
+  if (!source || !target) return;
+  if (Math.abs(source.currentTime - target.currentTime) > 0.08 || force) {
+    try {
+      target.currentTime = source.currentTime;
+    } catch (error) {
+      // Ignore transient seek errors until metadata is ready.
     }
+  }
+}
+
+function getActiveSecondary(wrapper) {
+  return wrapper.querySelector('[data-compare-secondary].is-active');
+}
+
+function updateCompareToggleLabel(button, activeKey) {
+  if (!button) return;
+  var defaultLabel = button.dataset.compareLabelDefault || 'Click to compare with AbsGS';
+  var altLabel = button.dataset.compareLabelAlt || 'Click to compare with 3DGS';
+  button.textContent = activeKey === '3dgs' ? defaultLabel : altLabel;
+}
+
+function setActiveSecondary(wrapper, activeKey) {
+  wrapper.querySelectorAll('[data-compare-secondary]').forEach(function(video) {
+    var isActive = video.dataset.compareKey === activeKey;
+    video.classList.toggle('is-active', isActive);
+    video.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    if (!isActive) {
+      video.pause();
+    }
+  });
+  wrapper.dataset.compareSecondaryActive = activeKey;
+}
+
+function syncCompareVideos(wrapper, primary, secondaryVideos) {
+  if (!primary || !secondaryVideos.length) return null;
+
+  function syncActive(force) {
+    var activeSecondary = getActiveSecondary(wrapper);
+    if (!activeSecondary) return;
+    syncVideoTime(primary, activeSecondary, force);
+    activeSecondary.playbackRate = primary.playbackRate;
   }
 
   primary.addEventListener('play', function() {
-    syncTime(true);
-    var playPromise = secondary.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(function() {});
-    }
+    syncActive(true);
+    playCompareVideo(getActiveSecondary(wrapper));
   });
 
   primary.addEventListener('pause', function() {
-    secondary.pause();
+    var activeSecondary = getActiveSecondary(wrapper);
+    if (activeSecondary) {
+      activeSecondary.pause();
+    }
   });
 
   primary.addEventListener('seeking', function() {
-    syncTime(true);
+    syncActive(true);
   });
 
   primary.addEventListener('timeupdate', function() {
-    syncTime(false);
+    syncActive(false);
   });
 
   primary.addEventListener('ratechange', function() {
-    secondary.playbackRate = primary.playbackRate;
+    syncActive(true);
   });
 
-  secondary.muted = true;
-  secondary.defaultMuted = true;
+  secondaryVideos.forEach(function(video) {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.addEventListener('loadedmetadata', function() {
+      if (video.classList.contains('is-active')) {
+        syncActive(true);
+        if (!primary.paused) {
+          playCompareVideo(video);
+        }
+      }
+    });
+  });
+
+  return {
+    syncActive: syncActive
+  };
 }
 
 function initCompareSlider(wrapper) {
   var primary = wrapper.querySelector('[data-compare-primary]');
-  var secondary = wrapper.querySelector('[data-compare-secondary]');
-  if (!primary || !secondary) return;
+  var secondaryVideos = Array.from(wrapper.querySelectorAll('[data-compare-secondary]'));
+  var root = wrapper.closest('[data-compare-root]') || wrapper;
+  var toggleButton = root.querySelector('[data-compare-toggle]');
+  if (!primary || !secondaryVideos.length) return;
 
   setComparePosition(wrapper, 50);
-  syncCompareVideos(primary, secondary);
+  setActiveSecondary(wrapper, wrapper.dataset.compareSecondaryActive || '3dgs');
+  updateCompareToggleLabel(toggleButton, wrapper.dataset.compareSecondaryActive || '3dgs');
+
+  var syncController = syncCompareVideos(wrapper, primary, secondaryVideos);
 
   var isDragging = false;
 
@@ -106,11 +164,37 @@ function initCompareSlider(wrapper) {
   window.addEventListener('pointercancel', stopDragging);
 
   primary.addEventListener('loadedmetadata', function() {
-    secondary.currentTime = primary.currentTime;
-    secondary.playbackRate = primary.playbackRate;
-    var playPromise = secondary.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(function() {});
+    if (syncController) {
+      syncController.syncActive(true);
+    }
+  });
+
+  if (toggleButton) {
+    toggleButton.addEventListener('click', function() {
+      var currentKey = wrapper.dataset.compareSecondaryActive || '3dgs';
+      var nextKey = currentKey === '3dgs' ? 'absgs' : '3dgs';
+      var currentVideo = getActiveSecondary(wrapper);
+
+      if (currentVideo) {
+        currentVideo.pause();
+      }
+
+      setActiveSecondary(wrapper, nextKey);
+      updateCompareToggleLabel(toggleButton, nextKey);
+
+      if (syncController) {
+        syncController.syncActive(true);
+      }
+
+      if (!primary.paused) {
+        playCompareVideo(getActiveSecondary(wrapper));
+      }
+    });
+  }
+
+  secondaryVideos.forEach(function(video) {
+    if (video.classList.contains('is-active') && !primary.paused) {
+      playCompareVideo(video);
     }
   });
 }
