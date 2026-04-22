@@ -267,17 +267,19 @@ body {
 .bibtex-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 0.9rem;
 }
 
 .bibtex-toolbar .title {
   margin-bottom: 0 !important;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .bibtex-copy-button {
   flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .bibtex-card pre {
@@ -297,12 +299,11 @@ body {
 
 @media screen and (max-width: 768px) {
   .bibtex-toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   .bibtex-copy-button {
-    width: 100%;
+    margin-left: auto;
   }
 }
 

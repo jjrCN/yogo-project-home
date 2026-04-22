@@ -193,33 +193,45 @@ function scheduleQuantitativeChartsRender() {
 }
 
 function copyTextToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) {
-    return navigator.clipboard.writeText(text);
-  }
-
   return new Promise(function(resolve, reject) {
-    var textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.setAttribute('readonly', '');
-    textArea.style.position = 'fixed';
-    textArea.style.top = '-9999px';
-    textArea.style.left = '-9999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+    function fallbackCopy() {
+      var textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      textArea.style.pointerEvents = 'none';
+      textArea.style.left = '0';
+      textArea.style.top = '0';
+      textArea.style.width = '1px';
+      textArea.style.height = '1px';
+      document.body.appendChild(textArea);
 
-    try {
-      var successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      if (successful) {
-        resolve();
-      } else {
-        reject(new Error('Copy command was unsuccessful.'));
+      textArea.focus({preventScroll: true});
+      textArea.select();
+      textArea.setSelectionRange(0, textArea.value.length);
+
+      try {
+        var successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          resolve();
+        } else {
+          reject(new Error('Copy command was unsuccessful.'));
+        }
+      } catch (error) {
+        document.body.removeChild(textArea);
+        reject(error);
       }
-    } catch (error) {
-      document.body.removeChild(textArea);
-      reject(error);
     }
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(text).then(resolve).catch(function() {
+        fallbackCopy();
+      });
+      return;
+    }
+
+    fallbackCopy();
   });
 }
 
@@ -233,9 +245,13 @@ function setupBibtexCopy() {
   }
 
   var defaultText = 'Copy BibTeX';
+  var bibtexCode = bibtexBlock.querySelector('code');
 
-  copyButton.addEventListener('click', function() {
-    copyTextToClipboard(bibtexBlock.textContent).then(function() {
+  copyButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    var bibtexText = bibtexCode ? bibtexCode.innerText : bibtexBlock.innerText;
+
+    copyTextToClipboard(bibtexText).then(function() {
       copyLabel.textContent = 'Copied';
       window.setTimeout(function() {
         copyLabel.textContent = defaultText;
