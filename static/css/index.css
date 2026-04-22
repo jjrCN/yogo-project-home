@@ -45,8 +45,7 @@ body {
 }
 
 .top-showcase .navbar,
-.top-showcase .hero,
-.top-showcase .teaser {
+.top-showcase .hero {
   position: relative;
   z-index: 1;
   background: transparent;
@@ -315,7 +314,7 @@ body {
   padding: 1.1rem 1.1rem 1rem;
   border: 1px solid #d9dde5;
   border-radius: 16px;
-  background: #fbfcff;
+  background: #ffffff;
 }
 
 .bibtex-toolbar {
