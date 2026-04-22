@@ -34,11 +34,56 @@ body {
   pointer-events: none;
 }
 
-.top-showcase .navbar,
+.top-showcase .navbar {
+  position: relative;
+  z-index: 30;
+  background: transparent;
+}
+
 .top-showcase .hero {
   position: relative;
   z-index: 1;
   background: transparent;
+}
+
+.top-showcase .navbar-menu,
+.top-showcase .navbar-start,
+.top-showcase .navbar-item.has-dropdown {
+  position: relative;
+  overflow: visible;
+}
+
+.top-showcase .navbar-dropdown {
+  display: block;
+  z-index: 31;
+  min-width: 12rem;
+  border-radius: 12px;
+  border-top: 0;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+}
+
+.top-showcase .navbar-item.has-dropdown:hover,
+.top-showcase .navbar-item.has-dropdown.is-active {
+  z-index: 32;
+}
+
+.top-showcase .navbar-item.has-dropdown:hover .navbar-dropdown,
+.top-showcase .navbar-item.has-dropdown.is-active .navbar-dropdown,
+.top-showcase .navbar-item.has-dropdown:focus-within .navbar-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.top-showcase .navbar-dropdown .navbar-item {
+  white-space: nowrap;
 }
 
 
@@ -58,7 +103,7 @@ body {
 
 
 .teaser .hero-body {
-  padding-top: 2rem;
+  padding-top: 3rem;
   padding-bottom: 1.25rem;
 }
 
