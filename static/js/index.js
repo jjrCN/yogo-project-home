@@ -11,7 +11,7 @@ var QUANTITATIVE_METRICS = [
   {key: 'evalSSIM', label: 'Evaluation SSIM', color: '#3a86ff', better: 'higher'},
   {key: 'evalLPIPS', label: 'Evaluation LPIPS', color: '#9c6644', better: 'lower'},
   {key: 'evalQalign', label: 'Evaluation Qalign', color: '#2a9d8f', better: 'higher'},
-  {key: 'point', label: 'Point', color: '#e9c46a', better: 'lower'}
+  {key: 'point', label: 'Points Num', color: '#e9c46a', better: 'lower'}
 ];
 
 var QUANTITATIVE_TRACK_LABELS = {
