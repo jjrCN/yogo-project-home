@@ -192,6 +192,63 @@ function scheduleQuantitativeChartsRender() {
   }, 120);
 }
 
+function copyTextToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+
+  return new Promise(function(resolve, reject) {
+    var textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.setAttribute('readonly', '');
+    textArea.style.position = 'fixed';
+    textArea.style.top = '-9999px';
+    textArea.style.left = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      if (successful) {
+        resolve();
+      } else {
+        reject(new Error('Copy command was unsuccessful.'));
+      }
+    } catch (error) {
+      document.body.removeChild(textArea);
+      reject(error);
+    }
+  });
+}
+
+function setupBibtexCopy() {
+  var copyButton = document.getElementById('copy-bibtex-button');
+  var copyLabel = document.getElementById('copy-bibtex-label');
+  var bibtexBlock = document.getElementById('bibtex-content');
+
+  if (!copyButton || !copyLabel || !bibtexBlock) {
+    return;
+  }
+
+  var defaultText = 'Copy BibTeX';
+
+  copyButton.addEventListener('click', function() {
+    copyTextToClipboard(bibtexBlock.textContent).then(function() {
+      copyLabel.textContent = 'Copied';
+      window.setTimeout(function() {
+        copyLabel.textContent = defaultText;
+      }, 1600);
+    }).catch(function() {
+      copyLabel.textContent = 'Copy Failed';
+      window.setTimeout(function() {
+        copyLabel.textContent = defaultText;
+      }, 1800);
+    });
+  });
+}
+
 $(document).ready(function() {
     // Check for click events on the navbar burger icon
     $(".navbar-burger").click(function() {
@@ -251,16 +308,19 @@ $(document).ready(function() {
         player.currentTime = player.duration / 100 * this.value;
       })
     }, false);*/
-    preloadInterpolationImages();
-
-    $('#interpolation-slider').on('input', function(event) {
-      setInterpolationImage(this.value);
-    });
-    setInterpolationImage(0);
-    $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
+    var interpolationSlider = document.getElementById('interpolation-slider');
+    if (interpolationSlider) {
+      preloadInterpolationImages();
+      $('#interpolation-slider').on('input', function(event) {
+        setInterpolationImage(this.value);
+      });
+      setInterpolationImage(0);
+      $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
+    }
 
     bulmaSlider.attach();
     renderQuantitativeCharts();
+    setupBibtexCopy();
     window.addEventListener('resize', scheduleQuantitativeChartsRender);
 
 })

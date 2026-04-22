@@ -236,6 +236,56 @@ body {
   height: auto;
 }
 
+.bibtex-card {
+  margin-top: 1rem;
+  padding: 1.1rem 1.1rem 1rem;
+  border: 1px solid #d9dde5;
+  border-radius: 16px;
+  background: #fbfcff;
+}
+
+.bibtex-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.bibtex-toolbar .title {
+  margin-bottom: 0 !important;
+}
+
+.bibtex-copy-button {
+  flex: 0 0 auto;
+}
+
+.bibtex-card pre {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #1f2430;
+  color: #f5f7fb;
+  overflow-x: auto;
+}
+
+.bibtex-card code {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+@media screen and (max-width: 768px) {
+  .bibtex-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bibtex-copy-button {
+    width: 100%;
+  }
+}
+
 
 .interpolation-panel {
   background: #f5f5f5;
