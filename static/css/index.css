@@ -172,6 +172,65 @@ body {
   margin-top: 1.25rem;
 }
 
+.quantitative-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1rem;
+}
+
+.quantitative-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #4a4a4a;
+  font-size: 0.95rem;
+}
+
+.quantitative-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+.quantitative-note {
+  margin: 0.85rem auto 1.4rem;
+  max-width: 760px;
+  color: #6b7280;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.quantitative-card {
+  margin-top: 1rem;
+  padding: 1rem 1rem 0.75rem;
+  border: 1px solid #d9dde5;
+  border-radius: 16px;
+  background: #fbfcff;
+}
+
+.quantitative-track-title {
+  margin-bottom: 0.4rem !important;
+}
+
+.quantitative-row {
+  margin-top: 0.25rem;
+}
+
+.quantitative-chart {
+  width: 100%;
+  overflow: hidden;
+}
+
+.quantitative-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 
 .interpolation-panel {
   background: #f5f5f5;

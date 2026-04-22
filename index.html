@@ -322,6 +322,93 @@
   <div class="container is-max-desktop">
 
     <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Qualitative Comparison</h2>
+        <div class="architecture-figure">
+          <picture>
+            <source
+              type="image/webp"
+              srcset="./assets/images/img4-1600.webp 1600w,
+                      ./assets/images/img4-2600.webp 2600w"
+              sizes="(max-width: 1023px) calc(100vw - 3rem), 960px">
+            <img src="./assets/images/img4.png"
+                 alt="Qualitative comparison of reconstruction results."
+                 class="architecture-image"
+                 width="2600"
+                 height="1403"
+                 decoding="async"
+                 loading="lazy">
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Quantitative Comparison</h2>
+        <div class="quantitative-legend">
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #264653;"></span>
+            <span>Test Qalign</span>
+          </div>
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #e76f51;"></span>
+            <span>Evaluation PSNR</span>
+          </div>
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #3a86ff;"></span>
+            <span>Evaluation SSIM</span>
+          </div>
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #9c6644;"></span>
+            <span>Evaluation LPIPS</span>
+          </div>
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #2a9d8f;"></span>
+            <span>Evaluation Qalign</span>
+          </div>
+          <div class="quantitative-legend-item">
+            <span class="quantitative-legend-swatch" style="background-color: #e9c46a;"></span>
+            <span>Point</span>
+          </div>
+        </div>
+        <p class="quantitative-note">
+          Bar heights are normalized within each track. Higher bars indicate better performance;
+          LPIPS and Point are inverted because lower is better. Raw values are shown above bars.
+        </p>
+        <div class="quantitative-card">
+          <h3 class="title is-5 has-text-centered quantitative-track-title">SSS</h3>
+          <div id="quant-chart-sss" class="quantitative-chart"></div>
+        </div>
+        <div class="columns quantitative-row">
+          <div class="column">
+            <div class="quantitative-card">
+              <h3 class="title is-5 has-text-centered quantitative-track-title">SSD</h3>
+              <div id="quant-chart-ssd" class="quantitative-chart"></div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="quantitative-card">
+              <h3 class="title is-5 has-text-centered quantitative-track-title">MSD</h3>
+              <div id="quant-chart-msd" class="quantitative-chart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
 
       <!-- Visual Effects. -->
       <div class="column">
