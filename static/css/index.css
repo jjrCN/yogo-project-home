@@ -2,6 +2,33 @@ body {
   font-family: 'Noto Sans', sans-serif;
 }
 
+.top-showcase {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(119, 190, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 88% 14%, rgba(255, 214, 153, 0.18), transparent 24%),
+    radial-gradient(circle at 52% 82%, rgba(191, 223, 255, 0.16), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #fbfcff 44%, #fffdfa 100%);
+}
+
+.top-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.08));
+  pointer-events: none;
+}
+
+.top-showcase .navbar,
+.top-showcase .hero {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
 
 .footer .icon-link {
     font-size: 25px;
@@ -61,23 +88,23 @@ body {
     font-family: 'Google Sans', sans-serif;
 }
 
-.yogo-word {
+.yogo-letter {
   display: inline-block;
 }
 
-.yogo-word-y {
+.yogo-letter-y {
   color: #d94841;
 }
 
-.yogo-word-o1 {
+.yogo-letter-o1 {
   color: #f08c00;
 }
 
-.yogo-word-g {
+.yogo-letter-g {
   color: #2b8a3e;
 }
 
-.yogo-word-o2 {
+.yogo-letter-o2 {
   color: #1c7ed6;
 }
 
