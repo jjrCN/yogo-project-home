@@ -130,6 +130,11 @@ body {
   overflow: hidden;
 }
 
+.results-carousel.is-static {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 .results-carousel .item {
   margin: 5px;
   overflow: hidden;
@@ -141,6 +146,16 @@ body {
 
 .results-carousel video {
   margin: 0;
+}
+
+.results-carousel.is-static .item {
+  margin: 0;
+}
+
+.results-carousel.is-static video {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 

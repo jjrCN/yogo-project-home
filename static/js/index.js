@@ -37,6 +37,20 @@ $(document).ready(function() {
 			autoplaySpeed: 3000,
     }
 
+    var resultsCarousel = document.querySelector('#results-carousel');
+    if (resultsCarousel) {
+      var resultItems = resultsCarousel.querySelectorAll('.item');
+      if (resultItems.length <= 1) {
+        resultsCarousel.classList.remove('carousel');
+        resultsCarousel.classList.add('is-static');
+      } else {
+        var visibleSlides = Math.min(3, resultItems.length);
+        options.slidesToShow = visibleSlides;
+        options.loop = resultItems.length > visibleSlides;
+        options.infinite = resultItems.length > visibleSlides;
+      }
+    }
+
 		// Initialize all div with carousel class
     var carousels = bulmaCarousel.attach('.carousel', options);
 
