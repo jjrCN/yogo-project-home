@@ -6,16 +6,13 @@ body {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 14% 16%, rgba(177, 213, 255, 0.78), transparent 23%),
-    radial-gradient(circle at 86% 12%, rgba(255, 223, 179, 0.78), transparent 22%),
-    radial-gradient(circle at 50% 78%, rgba(206, 227, 255, 0.72), transparent 27%),
-    linear-gradient(125deg,
-      #edf5ff 0%,
-      #edf5ff 34%,
-      #fff5e8 34%,
-      #fff5e8 62%,
-      #eef6ff 62%,
-      #eef6ff 100%);
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.48), transparent 24%),
+    radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.32), transparent 20%),
+    linear-gradient(128deg,
+      #edf2f6 0%,
+      #edf2f6 49.4%,
+      #f8f3eb 49.4%,
+      #f8f3eb 100%);
 }
 
 .top-showcase::before {
@@ -23,24 +20,17 @@ body {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(
-      125deg,
-      rgba(255, 255, 255, 0.26) 0,
-      rgba(255, 255, 255, 0.26) 22px,
-      rgba(255, 255, 255, 0) 22px,
-      rgba(255, 255, 255, 0) 68px
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.06));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.02));
   pointer-events: none;
 }
 
 .top-showcase::after {
   content: "";
   position: absolute;
-  inset: auto -10% -18% auto;
-  width: 48%;
-  height: 44%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
+  inset: auto 10% -22% auto;
+  width: 34%;
+  height: 40%;
+  background: radial-gradient(circle, rgba(214, 222, 232, 0.26), rgba(214, 222, 232, 0));
   pointer-events: none;
 }
 
