@@ -193,6 +193,10 @@ body {
 
 .results-carousel video {
   margin: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0f141b;
 }
 
 .results-carousel.is-static .item {
@@ -313,8 +317,9 @@ body {
   margin: 0;
   padding: 1rem 1.1rem;
   border-radius: 12px;
-  background: #1f2430;
-  color: #f5f7fb;
+  border: 1px solid #dde3eb;
+  background: #f7f9fc;
+  color: #2f3542;
   overflow-x: auto;
 }
 
@@ -322,6 +327,7 @@ body {
   font-size: 0.95rem;
   line-height: 1.6;
   white-space: pre;
+  color: inherit;
 }
 
 @media screen and (max-width: 768px) {

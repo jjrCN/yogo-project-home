@@ -265,6 +265,103 @@ function setupBibtexCopy() {
   });
 }
 
+function primeCarouselVideo(video) {
+  if (!video || video.dataset.loaded === 'true') {
+    return;
+  }
+
+  var source = video.querySelector('source[data-src]');
+  if (!source) {
+    return;
+  }
+
+  source.src = source.dataset.src;
+  video.dataset.loaded = 'true';
+  video.preload = 'auto';
+  video.load();
+}
+
+function playCarouselVideo(video) {
+  if (!video) {
+    return;
+  }
+
+  primeCarouselVideo(video);
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+
+  var playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(function() {});
+  }
+}
+
+function pauseCarouselVideo(video) {
+  if (video && !video.paused) {
+    video.pause();
+  }
+}
+
+function setupLazyCarouselVideos() {
+  var carousel = document.getElementById('results-carousel');
+  var videos = Array.prototype.slice.call(document.querySelectorAll('.lazy-carousel-video'));
+
+  if (!carousel || !videos.length) {
+    return;
+  }
+
+  var isCarouselNearViewport = false;
+
+  function primeAllVideos() {
+    videos.forEach(primeCarouselVideo);
+  }
+
+  function syncCarouselPlayback() {
+    carousel.dataset.shouldPlay = (isCarouselNearViewport && !document.hidden) ? 'true' : 'false';
+
+    if (carousel.dataset.shouldPlay === 'true') {
+      videos.forEach(playCarouselVideo);
+    } else {
+      videos.forEach(pauseCarouselVideo);
+    }
+  }
+
+  videos.forEach(function(video) {
+    video.addEventListener('canplay', function() {
+      if (carousel.dataset.shouldPlay === 'true') {
+        playCarouselVideo(video);
+      }
+    });
+  });
+
+  window.setTimeout(primeAllVideos, 0);
+
+  if (!('IntersectionObserver' in window)) {
+    isCarouselNearViewport = true;
+    syncCarouselPlayback();
+    return;
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      isCarouselNearViewport = entry.isIntersecting;
+      syncCarouselPlayback();
+    });
+  }, {
+    rootMargin: '320px 0px',
+    threshold: 0.15
+  });
+
+  observer.observe(carousel);
+
+  document.addEventListener('visibilitychange', function() {
+    syncCarouselPlayback();
+  });
+}
+
 $(document).ready(function() {
     // Check for click events on the navbar burger icon
     $(".navbar-burger").click(function() {
@@ -337,6 +434,7 @@ $(document).ready(function() {
     bulmaSlider.attach();
     renderQuantitativeCharts();
     setupBibtexCopy();
+    setupLazyCarouselVideos();
     window.addEventListener('resize', scheduleQuantitativeChartsRender);
 
 })
