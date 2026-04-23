@@ -320,12 +320,14 @@ function primeCarouselVideo(video) {
     return;
   }
 
-  var source = video.querySelector('source[data-src]');
-  if (!source) {
+  var sources = Array.prototype.slice.call(video.querySelectorAll('source[data-src]'));
+  if (!sources.length) {
     return;
   }
 
-  source.src = source.dataset.src;
+  sources.forEach(function(source) {
+    source.src = source.dataset.src;
+  });
   video.dataset.loaded = 'true';
   video.preload = 'auto';
   video.load();
