@@ -48,6 +48,16 @@ var QUANTITATIVE_TRACKS = {
 };
 
 var quantitativeResizeTimer = null;
+var quantitativeChartsRendered = false;
+
+function scheduleIdleTask(callback, timeout) {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(callback, {timeout: timeout || 1200});
+    return;
+  }
+
+  window.setTimeout(callback, timeout || 1200);
+}
 
 function preloadInterpolationImages() {
   for (var i = 0; i < NUM_INTERP_FRAMES; i++) {
@@ -178,18 +188,58 @@ function renderQuantitativeTrack(containerId, trackName) {
 }
 
 function renderQuantitativeCharts() {
+  quantitativeChartsRendered = true;
   renderQuantitativeTrack('quant-chart-sss', 'SSS');
   renderQuantitativeTrack('quant-chart-ssd', 'SSD');
   renderQuantitativeTrack('quant-chart-msd', 'MSD');
 }
 
 function scheduleQuantitativeChartsRender() {
+  if (!quantitativeChartsRendered) {
+    return;
+  }
+
   if (quantitativeResizeTimer !== null) {
     window.clearTimeout(quantitativeResizeTimer);
   }
   quantitativeResizeTimer = window.setTimeout(function() {
     renderQuantitativeCharts();
   }, 120);
+}
+
+function setupQuantitativeChartsRendering() {
+  var firstChart = document.getElementById('quant-chart-sss');
+  var section = firstChart ? firstChart.closest('.section') : null;
+
+  if (!firstChart || !section) {
+    return;
+  }
+
+  function renderOnce() {
+    if (!quantitativeChartsRendered) {
+      renderQuantitativeCharts();
+    }
+  }
+
+  scheduleIdleTask(renderOnce, 2200);
+
+  if (!('IntersectionObserver' in window)) {
+    return;
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        renderOnce();
+        observer.disconnect();
+      }
+    });
+  }, {
+    rootMargin: '900px 0px',
+    threshold: 0.01
+  });
+
+  observer.observe(section);
 }
 
 function copyTextToClipboard(text) {
@@ -314,15 +364,29 @@ function setupLazyCarouselVideos() {
   }
 
   var isCarouselNearViewport = false;
+  var preloadScheduled = false;
 
-  function primeAllVideos() {
-    videos.forEach(primeCarouselVideo);
+  function scheduleCarouselPreload() {
+    if (preloadScheduled) {
+      return;
+    }
+
+    preloadScheduled = true;
+
+    scheduleIdleTask(function() {
+      videos.forEach(function(video, index) {
+        window.setTimeout(function() {
+          primeCarouselVideo(video);
+        }, index * 350);
+      });
+    }, 450);
   }
 
   function syncCarouselPlayback() {
     carousel.dataset.shouldPlay = (isCarouselNearViewport && !document.hidden) ? 'true' : 'false';
 
     if (carousel.dataset.shouldPlay === 'true') {
+      videos.forEach(primeCarouselVideo);
       videos.forEach(playCarouselVideo);
     } else {
       videos.forEach(pauseCarouselVideo);
@@ -337,7 +401,7 @@ function setupLazyCarouselVideos() {
     });
   });
 
-  window.setTimeout(primeAllVideos, 0);
+  scheduleCarouselPreload();
 
   if (!('IntersectionObserver' in window)) {
     isCarouselNearViewport = true;
@@ -351,7 +415,7 @@ function setupLazyCarouselVideos() {
       syncCarouselPlayback();
     });
   }, {
-    rootMargin: '320px 0px',
+    rootMargin: '900px 0px',
     threshold: 0.15
   });
 
@@ -490,9 +554,11 @@ $(document).ready(function() {
       $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
     }
 
-    bulmaSlider.attach();
+    if (window.bulmaSlider && typeof bulmaSlider.attach === 'function') {
+      bulmaSlider.attach();
+    }
     setupResearchDropdown();
-    renderQuantitativeCharts();
+    setupQuantitativeChartsRendering();
     setupBibtexCopy();
     setupLazyCarouselVideos();
     window.addEventListener('resize', scheduleQuantitativeChartsRender);
