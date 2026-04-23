@@ -1,4 +1,10 @@
 .DS_Store
+assets/.DS_Store
+assets/ply/*.ply
+assets/ply/*.sog
+assets/ply/*.compressed.ply
+assets/ply/*.tmp
+assets/ply/.*.tmp
 assets/vedio/demo/1.mp4
 assets/vedio/demo/2.mp4
 assets/vedio/demo/1_web.mp4
