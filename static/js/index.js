@@ -1,10 +1,5 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
-var INTERP_BASE = "./static/interpolation/stacked";
-var NUM_INTERP_FRAMES = 240;
-
-var interp_images = [];
-
 var QUANTITATIVE_METRICS = [
   {key: 'testQalign', label: 'Test Qalign', color: '#264653', better: 'higher'},
   {key: 'evalPSNR', label: 'Evaluation PSNR', color: '#e76f51', better: 'higher'},
@@ -57,21 +52,6 @@ function scheduleIdleTask(callback, timeout) {
   }
 
   window.setTimeout(callback, timeout || 1200);
-}
-
-function preloadInterpolationImages() {
-  for (var i = 0; i < NUM_INTERP_FRAMES; i++) {
-    var path = INTERP_BASE + '/' + String(i).padStart(6, '0') + '.jpg';
-    interp_images[i] = new Image();
-    interp_images[i].src = path;
-  }
-}
-
-function setInterpolationImage(i) {
-  var image = interp_images[i];
-  image.ondragstart = function() { return false; };
-  image.oncontextmenu = function() { return false; };
-  $('#interpolation-image-wrapper').empty().append(image);
 }
 
 function escapeSvgText(text) {
@@ -481,13 +461,14 @@ function setupResearchDropdown() {
   });
 }
 
-$(document).ready(function() {
-    // Check for click events on the navbar burger icon
-    $(".navbar-burger").click(function() {
-      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-      $(".navbar-burger").toggleClass("is-active");
-      $(".navbar-menu").toggleClass("is-active");
-
+document.addEventListener('DOMContentLoaded', function() {
+    var navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'));
+    navbarBurgers.forEach(function(burger) {
+      burger.addEventListener('click', function() {
+        Array.prototype.slice.call(document.querySelectorAll('.navbar-burger, .navbar-menu')).forEach(function(element) {
+          element.classList.toggle('is-active');
+        });
+      });
     });
 
     var options = {
@@ -497,7 +478,7 @@ $(document).ready(function() {
 			infinite: true,
 			autoplay: false,
 			autoplaySpeed: 3000,
-    }
+    };
 
     var resultsCarousel = document.querySelector('#results-carousel');
     if (resultsCarousel) {
@@ -514,55 +495,17 @@ $(document).ready(function() {
     }
 
 		// Initialize all div with carousel class
-    var carousels = [];
     if (window.bulmaCarousel && typeof bulmaCarousel.attach === 'function') {
-      carousels = bulmaCarousel.attach('.carousel', options);
+      bulmaCarousel.attach('.carousel', options);
     }
     if (resultsCarousel && (resultsCarousel.classList.contains('is-static') || resultsCarousel.querySelector('.slider-container'))) {
       resultsCarousel.classList.add('is-carousel-ready');
     }
 
-    // Loop on each carousel initialized
-    for(var i = 0; i < carousels.length; i++) {
-    	// Add listener to  event
-    	carousels[i].on('before:show', state => {
-    		console.log(state);
-    	});
-    }
-
-    // Access to bulmaCarousel instance of an element
-    var element = document.querySelector('#my-element');
-    if (element && element.bulmaCarousel) {
-    	// bulmaCarousel instance is available as element.bulmaCarousel
-    	element.bulmaCarousel.on('before-show', function(state) {
-    		console.log(state);
-    	});
-    }
-
-    /*var player = document.getElementById('interpolation-video');
-    player.addEventListener('loadedmetadata', function() {
-      $('#interpolation-slider').on('input', function(event) {
-        console.log(this.value, player.duration);
-        player.currentTime = player.duration / 100 * this.value;
-      })
-    }, false);*/
-    var interpolationSlider = document.getElementById('interpolation-slider');
-    if (interpolationSlider) {
-      preloadInterpolationImages();
-      $('#interpolation-slider').on('input', function(event) {
-        setInterpolationImage(this.value);
-      });
-      setInterpolationImage(0);
-      $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
-    }
-
-    if (window.bulmaSlider && typeof bulmaSlider.attach === 'function') {
-      bulmaSlider.attach();
-    }
     setupResearchDropdown();
     setupQuantitativeChartsRendering();
     setupBibtexCopy();
     setupLazyCarouselVideos();
     window.addEventListener('resize', scheduleQuantitativeChartsRender);
 
-})
+});

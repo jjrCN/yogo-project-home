@@ -97,6 +97,13 @@ body {
     margin-bottom: 5px;
 }
 
+.icon .inline-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
 .dnerf {
   font-variant: small-caps;
 }
@@ -431,33 +438,4 @@ body {
   .bibtex-copy-button {
     margin-left: auto;
   }
-}
-
-
-.interpolation-panel {
-  background: #f5f5f5;
-  border-radius: 10px;
-}
-
-.interpolation-panel .interpolation-image {
-  width: 100%;
-  border-radius: 5px;
-}
-
-.interpolation-video-column {
-}
-
-.interpolation-panel .slider {
-  margin: 0 !important;
-}
-
-.interpolation-panel .slider {
-  margin: 0 !important;
-}
-
-#interpolation-image-wrapper {
-  width: 100%;
-}
-#interpolation-image-wrapper img {
-  border-radius: 5px;
 }
