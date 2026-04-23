@@ -2,7 +2,6 @@
 assets/.DS_Store
 assets/ply/*.ply
 assets/ply/*.sog
-!assets/ply/point_cloud.sog
 assets/ply/*.compressed.ply
 assets/ply/*.tmp
 assets/ply/.*.tmp
