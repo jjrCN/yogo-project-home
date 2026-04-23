@@ -3,7 +3,7 @@ import { OrbitControls } from "./vendor/OrbitControls.js";
 import { PointerLockControls } from "./vendor/PointerLockControls.js";
 import { SparkRenderer, SplatMesh } from "@sparkjsdev/spark";
 
-const SPLAT_URL = "../assets/ply/spark/point_cloud-lod.rad?v=spark2-20260423";
+const SPLAT_URL = "../assets/ply/spark/point_cloud-lod.rad?v=spark2-20260423-fix1";
 const MOBILE_QUERY = "(pointer: coarse), (max-width: 720px)";
 
 const canvas = document.querySelector("#viewer");
@@ -14,6 +14,18 @@ const resetButton = document.querySelector("#resetView");
 const walkButton = document.querySelector("#walkToggle");
 const qualityButton = document.querySelector("#qualityToggle");
 const walkPrompt = document.querySelector("#walkPrompt");
+
+progressBar.classList.add("is-loading");
+statusText.textContent = "Starting Spark 2.0 viewer...";
+statusDetail.textContent = "Loading runtime modules and preparing the streamable LoD scene.";
+
+window.addEventListener("error", (event) => {
+  showFatalError(event.error ?? event.message);
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  showFatalError(event.reason);
+});
 
 const isMobile = window.matchMedia(MOBILE_QUERY).matches;
 const qualityPresets = {
@@ -32,6 +44,7 @@ const qualityPresets = {
 let qualityMode = "high";
 let walkModeRequested = false;
 let initialCameraState = null;
+let dirty = true;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x080b11);
@@ -73,7 +86,6 @@ orbitControls.zoomToCursor = true;
 const walkControls = new PointerLockControls(camera, renderer.domElement);
 const pressedKeys = new Set();
 const clock = new THREE.Clock();
-let dirty = true;
 
 const splatMesh = new SplatMesh({
   url: SPLAT_URL,
@@ -83,12 +95,14 @@ const splatMesh = new SplatMesh({
   onProgress: (event) => {
     if (event.lengthComputable && event.total > 0) {
       const percent = Math.min(95, Math.round((event.loaded / event.total) * 100));
+      progressBar.classList.remove("is-loading");
       progressBar.style.width = `${percent}%`;
       statusText.textContent = `Loading Spark LoD header... ${percent}%`;
       statusDetail.textContent = "Visible Gaussian chunks will stream automatically while you move.";
     }
   },
   onLoad: () => {
+    progressBar.classList.remove("is-loading");
     progressBar.style.width = "100%";
     statusText.textContent = "Spark viewer ready";
     statusDetail.textContent = "The scene is streaming visible LoD chunks. Move closer for more detail.";
@@ -96,12 +110,24 @@ const splatMesh = new SplatMesh({
 });
 
 scene.add(splatMesh);
+setStatus(
+  "Streaming Spark LoD scene...",
+  "The LoD header is loading first; visible Gaussian chunks will stream as the camera settles."
+);
 
 function setStatus(message, detail) {
   statusText.textContent = message;
   if (detail) {
     statusDetail.textContent = detail;
   }
+}
+
+function showFatalError(error) {
+  console.error(error);
+  progressBar.classList.remove("is-loading");
+  progressBar.classList.add("is-error");
+  progressBar.style.width = "100%";
+  setStatus("Viewer initialization failed", "The browser reported an error while starting Spark. Please refresh once, or send us the console message.");
 }
 
 function frameScene() {
@@ -265,10 +291,15 @@ window.addEventListener("resize", resize);
 
 splatMesh.initialized
   .then(() => {
+    progressBar.classList.remove("is-loading");
+    progressBar.style.width = "100%";
+    setStatus("Spark viewer ready", "The scene is streaming visible LoD chunks. Move closer for more detail.");
     frameScene();
   })
   .catch((error) => {
     console.error(error);
+    progressBar.classList.remove("is-loading");
+    progressBar.classList.add("is-error");
     progressBar.style.width = "100%";
     setStatus("Unable to load the Spark scene", "Please refresh the page or check the browser console.");
   });
