@@ -448,7 +448,13 @@ $(document).ready(function() {
     }
 
 		// Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
+    var carousels = [];
+    if (window.bulmaCarousel && typeof bulmaCarousel.attach === 'function') {
+      carousels = bulmaCarousel.attach('.carousel', options);
+    }
+    if (resultsCarousel && (resultsCarousel.classList.contains('is-static') || resultsCarousel.querySelector('.slider-container'))) {
+      resultsCarousel.classList.add('is-carousel-ready');
+    }
 
     // Loop on each carousel initialized
     for(var i = 0; i < carousels.length; i++) {

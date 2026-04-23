@@ -256,6 +256,21 @@ body {
   background: #0f141b;
 }
 
+.results-carousel:not(.is-carousel-ready) {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.results-carousel:not(.is-carousel-ready) > .item {
+  flex: 0 0 calc((100% - 20px) / 3);
+  margin: 0;
+  scroll-snap-align: start;
+}
+
 .results-carousel.is-static .item {
   margin: 0;
 }
@@ -264,6 +279,18 @@ body {
   display: block;
   width: 100%;
   height: auto;
+}
+
+@media screen and (max-width: 900px) {
+  .results-carousel:not(.is-carousel-ready) > .item {
+    flex-basis: calc((100% - 10px) / 2);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .results-carousel:not(.is-carousel-ready) > .item {
+    flex-basis: 100%;
+  }
 }
 
 .architecture-figure {
