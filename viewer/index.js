@@ -3,8 +3,13 @@ import { OrbitControls } from "./vendor/OrbitControls.js";
 import { PointerLockControls } from "./vendor/PointerLockControls.js";
 import { SparkRenderer, SplatMesh } from "@sparkjsdev/spark";
 
-const SPLAT_URL = "../assets/ply/spark/point_cloud-lod.rad?v=spark2-20260423-fix1";
+const CACHE_VERSION = "spark2-20260423-fix4";
+const SPLAT_URL = `../assets/ply/spark/point_cloud-lod.rad?v=${CACHE_VERSION}`;
 const MOBILE_QUERY = "(pointer: coarse), (max-width: 720px)";
+const SCENE_BOUNDS = {
+  center: new THREE.Vector3(-0.78407, -1.1236, 0.790845),
+  size: new THREE.Vector3(8.089123, 2.769331, 5.899971),
+};
 
 const canvas = document.querySelector("#viewer");
 const statusText = document.querySelector("#statusText");
@@ -45,6 +50,9 @@ let qualityMode = "high";
 let walkModeRequested = false;
 let initialCameraState = null;
 let dirty = true;
+let headerReady = false;
+let firstChunksReady = false;
+const streamedChunks = new Set();
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x080b11);
@@ -76,6 +84,7 @@ const spark = new SparkRenderer({
   },
   ...qualityPresets[qualityMode],
 });
+scene.add(spark);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enableDamping = true;
@@ -102,10 +111,12 @@ const splatMesh = new SplatMesh({
     }
   },
   onLoad: () => {
-    progressBar.classList.remove("is-loading");
-    progressBar.style.width = "100%";
-    statusText.textContent = "Spark viewer ready";
-    statusDetail.textContent = "The scene is streaming visible LoD chunks. Move closer for more detail.";
+    headerReady = true;
+    progressBar.classList.add("is-loading");
+    progressBar.style.width = "";
+    statusText.textContent = "Spark LoD header ready";
+    statusDetail.textContent = "Fetching the first visible Gaussian chunks for the initial view.";
+    updateStreamingStatus(performance.getEntriesByType("resource"));
   },
 });
 
@@ -122,6 +133,38 @@ function setStatus(message, detail) {
   }
 }
 
+function updateStreamingStatus(entries = []) {
+  for (const entry of entries) {
+    if (entry.name?.includes(".radc")) {
+      streamedChunks.add(entry.name);
+    }
+  }
+
+  if (!headerReady || firstChunksReady || streamedChunks.size === 0) {
+    return;
+  }
+
+  if (streamedChunks.size < 4) {
+    setStatus(
+      "Rendering first visible chunks...",
+      "The scene appears as soon as the first Gaussian chunks reach the GPU."
+    );
+    return;
+  }
+
+  firstChunksReady = true;
+  progressBar.classList.remove("is-loading");
+  progressBar.style.width = "100%";
+  setStatus("Spark viewer ready", "Drag to orbit, right-drag to pan, scroll to zoom, or switch to Walk Mode.");
+}
+
+if ("PerformanceObserver" in window) {
+  const resourceObserver = new PerformanceObserver((list) => {
+    updateStreamingStatus(list.getEntries());
+  });
+  resourceObserver.observe({ type: "resource", buffered: true });
+}
+
 function showFatalError(error) {
   console.error(error);
   progressBar.classList.remove("is-loading");
@@ -130,36 +173,35 @@ function showFatalError(error) {
   setStatus("Viewer initialization failed", "The browser reported an error while starting Spark. Please refresh once, or send us the console message.");
 }
 
-function frameScene() {
-  const fallbackTarget = new THREE.Vector3(0, 1.2, 0);
-  const fallbackPosition = new THREE.Vector3(0, 1.6, 4.2);
+function applyCameraFrame(center, size) {
+  const radius = Math.max(size.x, size.y, size.z, 1);
 
+  camera.near = Math.max(radius / 10000, 0.005);
+  camera.far = Math.max(radius * 24, 100);
+  camera.position.set(
+    center.x + radius * 0.04,
+    center.y + Math.max(size.y * 0.25, radius * 0.16),
+    center.z + radius * 0.9
+  );
+  camera.lookAt(center);
+  camera.updateProjectionMatrix();
+  orbitControls.target.copy(center);
+  orbitControls.minDistance = radius * 0.01;
+  orbitControls.maxDistance = radius * 4.5;
+  initialCameraState = {
+    position: camera.position.clone(),
+    target: center.clone(),
+  };
+}
+
+function frameScene() {
   try {
     const box = splatMesh.getBoundingBox(true);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
-    const radius = Math.max(size.x, size.y, size.z, 1);
-
-    camera.near = Math.max(radius / 10000, 0.005);
-    camera.far = Math.max(radius * 24, 100);
-    camera.position.set(center.x, center.y + size.y * 0.18, center.z + radius * 0.68);
-    camera.lookAt(center);
-    camera.updateProjectionMatrix();
-    orbitControls.target.copy(center);
-    orbitControls.minDistance = radius * 0.01;
-    orbitControls.maxDistance = radius * 4.5;
-    initialCameraState = {
-      position: camera.position.clone(),
-      target: center.clone(),
-    };
+    applyCameraFrame(center, size);
   } catch (error) {
-    camera.position.copy(fallbackPosition);
-    camera.lookAt(fallbackTarget);
-    orbitControls.target.copy(fallbackTarget);
-    initialCameraState = {
-      position: fallbackPosition,
-      target: fallbackTarget,
-    };
+    applyCameraFrame(SCENE_BOUNDS.center, SCENE_BOUNDS.size);
   }
 
   orbitControls.update();
@@ -235,7 +277,7 @@ function animate() {
   }
   updateWalk(deltaTime);
 
-  spark.render(scene, camera);
+  renderer.render(scene, camera);
   dirty = false;
   requestAnimationFrame(animate);
 }
@@ -291,10 +333,12 @@ window.addEventListener("resize", resize);
 
 splatMesh.initialized
   .then(() => {
-    progressBar.classList.remove("is-loading");
-    progressBar.style.width = "100%";
-    setStatus("Spark viewer ready", "The scene is streaming visible LoD chunks. Move closer for more detail.");
+    headerReady = true;
+    progressBar.classList.add("is-loading");
+    progressBar.style.width = "";
+    setStatus("Spark LoD header ready", "Fetching the first visible Gaussian chunks for the initial view.");
     frameScene();
+    updateStreamingStatus(performance.getEntriesByType("resource"));
   })
   .catch((error) => {
     console.error(error);
@@ -313,5 +357,6 @@ window.yogoViewer = {
   scene,
   spark,
   splatMesh,
+  orbitControls,
   resetView,
 };
