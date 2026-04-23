@@ -3,7 +3,7 @@ import { OrbitControls } from "./vendor/OrbitControls.js";
 import { PointerLockControls } from "./vendor/PointerLockControls.js";
 import { SparkRenderer, SplatMesh } from "@sparkjsdev/spark";
 
-const SPLAT_URL = "../assets/ply/spark/point_cloud-lod.rad";
+const SPLAT_URL = "../assets/ply/spark/point_cloud-lod.rad?v=spark2-20260423";
 const MOBILE_QUERY = "(pointer: coarse), (max-width: 720px)";
 
 const canvas = document.querySelector("#viewer");
