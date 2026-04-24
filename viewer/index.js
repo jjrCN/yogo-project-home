@@ -3,12 +3,17 @@ import { OrbitControls } from "./vendor/OrbitControls.js";
 import { PointerLockControls } from "./vendor/PointerLockControls.js";
 import { SparkRenderer, SplatMesh } from "@sparkjsdev/spark";
 
-const CACHE_VERSION = "spark2-20260423-fix4";
+const CACHE_VERSION = "spark2-20260424-fix5";
 const SPLAT_URL = `../assets/ply/spark/point_cloud-lod.rad?v=${CACHE_VERSION}`;
 const MOBILE_QUERY = "(pointer: coarse), (max-width: 720px)";
+const WORLD_UP = new THREE.Vector3(0, -1, 0);
 const SCENE_BOUNDS = {
   center: new THREE.Vector3(-0.78407, -1.1236, 0.790845),
   size: new THREE.Vector3(8.089123, 2.769331, 5.899971),
+};
+const INITIAL_VIEW = {
+  position: new THREE.Vector3(-0.05, -0.93, 1.72),
+  target: new THREE.Vector3(-0.7, -1.06, -1.15),
 };
 
 const canvas = document.querySelector("#viewer");
@@ -58,6 +63,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x080b11);
 
 const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.01, 1000);
+camera.up.copy(WORLD_UP);
 camera.position.set(0, 1.5, 4);
 
 const renderer = new THREE.WebGLRenderer({
@@ -173,25 +179,36 @@ function showFatalError(error) {
   setStatus("Viewer initialization failed", "The browser reported an error while starting Spark. Please refresh once, or send us the console message.");
 }
 
-function applyCameraFrame(center, size) {
-  const radius = Math.max(size.x, size.y, size.z, 1);
-
+function applyView(position, target, radius) {
+  camera.up.copy(WORLD_UP);
   camera.near = Math.max(radius / 10000, 0.005);
   camera.far = Math.max(radius * 24, 100);
-  camera.position.set(
-    center.x + radius * 0.04,
-    center.y + Math.max(size.y * 0.25, radius * 0.16),
-    center.z + radius * 0.9
-  );
-  camera.lookAt(center);
+  camera.position.copy(position);
+  camera.lookAt(target);
   camera.updateProjectionMatrix();
-  orbitControls.target.copy(center);
+  orbitControls.target.copy(target);
   orbitControls.minDistance = radius * 0.01;
   orbitControls.maxDistance = radius * 4.5;
   initialCameraState = {
     position: camera.position.clone(),
-    target: center.clone(),
+    target: target.clone(),
+    up: camera.up.clone(),
   };
+}
+
+function applyCameraFrame(center, size) {
+  const radius = Math.max(size.x, size.y, size.z, 1);
+  const position = new THREE.Vector3(
+    center.x + radius * 0.04,
+    center.y + WORLD_UP.y * Math.max(size.y * 0.25, radius * 0.16),
+    center.z + radius * 0.9
+  );
+  applyView(position, center, radius);
+}
+
+function applyInitialView() {
+  const radius = Math.max(SCENE_BOUNDS.size.x, SCENE_BOUNDS.size.y, SCENE_BOUNDS.size.z, 1);
+  applyView(INITIAL_VIEW.position, INITIAL_VIEW.target, radius);
 }
 
 function frameScene() {
@@ -201,7 +218,7 @@ function frameScene() {
     const center = box.getCenter(new THREE.Vector3());
     applyCameraFrame(center, size);
   } catch (error) {
-    applyCameraFrame(SCENE_BOUNDS.center, SCENE_BOUNDS.size);
+    applyInitialView();
   }
 
   orbitControls.update();
@@ -214,6 +231,7 @@ function resetView() {
     return;
   }
 
+  camera.up.copy(initialCameraState.up ?? WORLD_UP);
   camera.position.copy(initialCameraState.position);
   orbitControls.target.copy(initialCameraState.target);
   camera.lookAt(initialCameraState.target);
@@ -261,7 +279,7 @@ function updateWalk(deltaTime) {
     walkControls.moveRight(right * distance);
   }
   if (vertical !== 0) {
-    camera.position.y += vertical * distance;
+    camera.position.addScaledVector(WORLD_UP, vertical * distance);
   }
   if (forward !== 0 || right !== 0 || vertical !== 0) {
     dirty = true;
